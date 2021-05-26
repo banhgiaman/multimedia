@@ -1,0 +1,12 @@
+data/
+
+media/
+
+venv/
+
+__pycache__/
+
+models/
+
+dl_models/
+

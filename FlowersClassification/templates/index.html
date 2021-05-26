@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Flower Prediction</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <form id="flower-predict" enctype="multipart/form-data" action='/predict/' method='post'>
+            <div class="row">
+                {% csrf_token %}
+                <p>
+                    <label for="id_image">Choose a flower image that you would like to predict: </label>
+                    <input name='imagePath' type='file' id='id_image'>
+                </p>
+                <input type="submit" class="btn btn-primary" value="Predict" />
+            </div>
+            <form>
+    </div>
+    <hr />
+    <div class='prediction-result'></div>
+    <div class='loading'>
+        <div class="spinner-border" role="status" style='display: none'>
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $("#flower-predict").submit(function (e) {
+            e.preventDefault();
+            let data = new FormData();
+            data.append('imagePath', $('#id_image')[0].files[0])
+            $('.loading').children("*").css('display', 'block')
+            $('.prediction-result').empty()
+            $.ajax({
+                type: 'POST',
+                url: "http://127.0.0.1:8000/predict/",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    let html =
+                        `<img src= ${response.img_url} alt='flower image' /><h3>Prediction: </h3>`;
+                    $.each(response.predictions, (index, value) => {
+                        if (value.rate) {
+                            html += `<p>Flower name: ${value.name} (${value.rate}%) </p>`
+                        }
+                    });
+                    $('.prediction-result').prepend(html)
+                },
+                error: function (response) {
+                    alert(response["responseJSON"]["error"]);
+                },
+                complete: function (response) {
+                    $('.loading').children("*").css('display', 'none')
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>
