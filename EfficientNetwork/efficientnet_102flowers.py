@@ -43,7 +43,7 @@ if __name__ == '__main__':
     img_size = (600, 600)
     batch_size = 2
     model = model_fn(preprocess_input=preprocess_input)
-    model.load_weights(os.path.join('models', 'EFF_102FLOWERS', 'checkpoints'))
+    # model.load_weights(os.path.join('models', 'EFF_102FLOWERS', 'checkpoints'))
     model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
         filepath=os.path.join('models', 'EFF_102FLOWERS', 'checkpoints'),
         save_weights_only=True,
