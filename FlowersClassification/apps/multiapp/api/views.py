@@ -18,7 +18,7 @@ class FlowerPrediction(APIView):
             'predictions': predictions
         }
         print(data)
-        if predictions[0]['rate'] > 40:
+        if predictions[0]['rate'] > 0:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM flowers WHERE Name = %s LIMIT 1", predictions[0]['name'])
                 row = cursor.fetchone()
